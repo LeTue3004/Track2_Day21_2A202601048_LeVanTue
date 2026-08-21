@@ -13,6 +13,8 @@ from sklearn.metrics import accuracy_score, confusion_matrix, f1_score, precisio
 # Ly do: bo du lieu Adult co ty le lop 75/25. Mot mo hinh doan bua
 # "thu nhap thap" cho moi mau da dat accuracy 0.75 ma khong hoc duoc gi.
 F1_THRESHOLD = 0.65
+POSITIVE_CLASS_RATE_REFERENCE = 0.248
+POSITIVE_CLASS_RATE_TOLERANCE = 0.05
 
 
 def train(
@@ -39,6 +41,20 @@ def train(
     y_train = df_train["target"]
     X_eval = df_eval.drop(columns=["target"])
     y_eval = df_eval["target"]
+    positive_class_rate = float(y_train.mean())
+    class_rate_drift = abs(positive_class_rate - POSITIVE_CLASS_RATE_REFERENCE)
+
+    if class_rate_drift > POSITIVE_CLASS_RATE_TOLERANCE:
+        print(
+            "WARNING: Positive-class rate drift detected: "
+            f"{positive_class_rate:.2%} differs from the {POSITIVE_CLASS_RATE_REFERENCE:.2%} "
+            f"reference by {class_rate_drift:.2%}."
+        )
+    else:
+        print(
+            "Positive-class rate check passed: "
+            f"{positive_class_rate:.2%} (reference {POSITIVE_CLASS_RATE_REFERENCE:.2%})."
+        )
 
     run_name = (
         f"gradient_boosting_n{params['n_estimators']}"
@@ -47,6 +63,8 @@ def train(
     with mlflow.start_run(run_name=run_name):
 
         mlflow.log_params(params)
+        mlflow.log_metric("positive_class_rate", positive_class_rate)
+        mlflow.log_metric("positive_class_rate_drift", class_rate_drift)
 
         model = GradientBoostingClassifier(**params, random_state=42)
         model.fit(X_train, y_train)
@@ -101,6 +119,8 @@ def train(
                     "accuracy": acc,
                     "best_threshold": best_threshold,
                     "f1_score_default_threshold": f1_default,
+                    "positive_class_rate": positive_class_rate,
+                    "positive_class_rate_drift": class_rate_drift,
                 },
                 f,
             )

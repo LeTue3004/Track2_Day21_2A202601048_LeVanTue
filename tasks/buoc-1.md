@@ -85,11 +85,11 @@ max_depth: 3
 
 Giải thích từng tham số:
 
-| Tham số | Ý nghĩa | Gợi ý giá trị thử nghiệm |
-|---|---|---|
-| n_estimators | Số cây được cộng dồn qua các vòng boosting | 50, 100, 200 |
-| learning_rate | Mức đóng góp của mỗi cây vào kết quả cuối | 0.05, 0.1, 0.2 |
-| max_depth | Độ sâu tối đa của mỗi cây | 2, 3, 5 |
+| Tham số      | Ý nghĩa                                            | Gợi ý giá trị thử nghiệm |
+| ------------- | ---------------------------------------------------- | ------------------------------ |
+| n_estimators  | Số cây được cộng dồn qua các vòng boosting  | 50, 100, 200                   |
+| learning_rate | Mức đóng góp của mỗi cây vào kết quả cuối | 0.05, 0.1, 0.2                 |
+| max_depth     | Độ sâu tối đa của mỗi cây                    | 2, 3, 5                        |
 
 Khác với RandomForest (các cây độc lập nhau), GradientBoosting huấn luyện cây sau để sửa lỗi của các cây trước. Vì vậy `n_estimators` và `learning_rate` có quan hệ đánh đổi: giảm `learning_rate` thì thường phải tăng `n_estimators` để bù lại.
 
@@ -100,6 +100,7 @@ Khác với RandomForest (các cây độc lập nhau), GradientBoosting huấn 
 Tạo file `src/train.py` theo khung dưới đây. Các vị trí có nhãn `# TODO` là phần bạn cần viết code.
 
 Nhiệm vụ của script này:
+
 1. Đọc dữ liệu huấn luyện (`train_batch1.csv`) và dữ liệu đánh giá (`holdout.csv`).
 2. Huấn luyện mô hình `GradientBoostingClassifier` với các siêu tham số từ `params.yaml`.
 3. Ghi kết quả (`f1_score`, `accuracy`) vào MLflow.

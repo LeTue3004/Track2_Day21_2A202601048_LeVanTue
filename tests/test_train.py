@@ -65,6 +65,8 @@ def test_report_file_created(tmp_path):
     assert "accuracy" in report
     assert "best_threshold" in report
     assert "f1_score_default_threshold" in report
+    assert "positive_class_rate" in report
+    assert "positive_class_rate_drift" in report
 
 
 def test_model_file_created(tmp_path):
