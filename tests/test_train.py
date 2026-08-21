@@ -63,6 +63,8 @@ def test_report_file_created(tmp_path):
         report = json.load(f)
     assert "f1_score" in report
     assert "accuracy" in report
+    assert "best_threshold" in report
+    assert "f1_score_default_threshold" in report
 
 
 def test_model_file_created(tmp_path):
@@ -75,3 +77,19 @@ def test_model_file_created(tmp_path):
     )
 
     assert os.path.exists("models/model.joblib")
+
+
+def test_detail_report_created(tmp_path):
+    """Kiem tra bao cao precision/recall duoc tao sau khi huan luyen."""
+    train_path, eval_path = _make_temp_data(tmp_path)
+    train(
+        {"n_estimators": 10, "learning_rate": 0.1, "max_depth": 2},
+        data_path=train_path,
+        eval_path=eval_path,
+    )
+
+    with open("outputs/detail.txt") as f:
+        detail = f.read()
+    assert "Confusion matrix" in detail
+    assert "precision=" in detail
+    assert "recall=" in detail

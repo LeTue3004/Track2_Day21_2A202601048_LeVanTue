@@ -64,7 +64,9 @@ def score(req: ScoreRequest):
             detail="Expected 10 features (adult income)",
         )
 
-    prediction = int(model.predict([req.features])[0])
+    threshold = getattr(model, "decision_threshold", 0.5)
+    probability = model.predict_proba([req.features])[0, 1]
+    prediction = int(probability >= threshold)
     label = "thu_nhap_cao" if prediction == 1 else "thu_nhap_thap"
     return {"prediction": prediction, "label": label}
 
