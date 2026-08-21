@@ -1,0 +1,6 @@
+[core]
+    remote = labstore
+['remote "labstore"']
+    url = s3://income-mlops-levan-202601048/dvc
+    profile = default
+    region = ap-southeast-1
